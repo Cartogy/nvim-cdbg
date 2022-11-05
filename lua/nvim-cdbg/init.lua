@@ -1,11 +1,29 @@
 print("In Nvim-cdbg")
+
 local M = {}
 
 local c_compile_cmd = 'cmake --build'
 local relative_build = '/out/build/'
 
-M.example = function()
-	print("In Example")
+--M.example = function()
+--	print("In Example")
+--end
+
+M.setup = function(opts)
+	if opts['cmd'] then
+		c_compile_cmd = opts['cmd']
+	end
+	if opts['relative_build'] then
+		relative_build = opts['relative_build']
+	end
+end
+
+M.set_compile_cmd = function(s)
+	c_compile_cmd = s
+end
+
+M.set_build_path = function(b)
+	relative_build = b
 end
 
 -- [[ New commands used:
@@ -14,6 +32,7 @@ end
 -- * [ ] vim.fn.getreg('x') -> Get value of register
 -- ]]
 
+-- Compile using CMake
 M.compile = function()
 	local run = c_compile_cmd .. " " .. vim.fn.getcwd() .. relative_build
 	-- print(run)
@@ -51,28 +70,17 @@ M.compile = function()
 		else
 			print("ERROR:No 'CMakeLists.txt' in root directory.")
 		end
+
 	end
-
---	print(vim.fn.getreg('x'))
---	print(no_git)
---	-- Check only if 'fatal' is the first word. (Some cases could be that a directory has 'fatal' as a subdirectory.)
---	if no_git == 0 then
---		print("ERROR: Not a Git Repo.")
---		print("SOLUTION: Initialize a git repo in the desired root directory for the project.")
---	else
---		print("Has Git Repo")
---		-- Remove 'new line' character from the command.
---	end
-
 end
 
-M.startup = function()
+
+-- Begin Debugging
+M.start_debug = function()
 	--vim.cmd('echo "hello in lua function"')
 	vim.g.termdebug_wide = 1
 	vim.cmd('packadd termdebug')
 	vim.cmd('Termdebug')
 end
-
--- M.compile()
 
 return M

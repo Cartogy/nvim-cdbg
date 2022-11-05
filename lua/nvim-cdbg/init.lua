@@ -1,4 +1,3 @@
-print("In Nvim-cdbg")
 
 local M = {}
 
@@ -16,6 +15,7 @@ M.setup = function(opts)
 	if opts['relative_build'] then
 		relative_build = opts['relative_build']
 	end
+--	print("Running nvim-cdbg")
 end
 
 M.set_compile_cmd = function(s)

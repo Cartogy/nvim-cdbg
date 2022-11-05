@@ -1,0 +1,40 @@
+===============================================================================
+								    *nvim-cdbg
+This plugin makes it easier to begin debugging a C/C++ project using cmake.
+It is meant to be used for large projects with multiple sub-directories.
+Not ideal for simple projects that are contained in a single directory (It is
+recommended to use ':make' for simple projects.)
+
+
+							      *nvim-cdbg.setup
+nvim-cdbg.setup( {options} )
+
+	Setup the plugin to use certain commands and build paths.
+
+
+							*nvim-cdbg.start_debug
+nvim-cdbg.start_debug()
+
+	Runs ':packadd termdebug' and ':Termdebug'.
+	Opening the GDB and program execution, alongside the source code, in
+	neovim.
+
+
+							  *nvim-cdbg.compile()
+nvim-cdbg.compile()
+
+	Compiles the project using the given build command.
+	The default is 'cmake --build <build-path>'.
+	It utilizes git to find the root directory.
+	It does three checks, before compiling:
+		1. Check if the project is a git repository, to find the root
+		directory of the project.
+		2. Check if the root directory contains a 'CMakeLists.txt'
+		3. Check if the specified build path exists.
+		4. Run the compile command, starting on the root directory and
+		outputting in the specified build path.
+
+	
+	
+
+vim:tw=78:ts=8:ft=help:norl:

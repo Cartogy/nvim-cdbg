@@ -24,3 +24,8 @@ These debugger plugins seem too complicated for my basic needs, so I set out to 
 * git
 * gdb
 * cmake
+
+# TODO
+
+* [ ] Display menu to select which binary to execute in GDB.
+* [ ] Get Documentation working properly.

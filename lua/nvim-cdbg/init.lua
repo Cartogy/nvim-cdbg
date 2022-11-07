@@ -32,6 +32,38 @@ end
 -- * [ ] vim.fn.getreg('x') -> Get value of register
 -- ]]
 
+local has_git = function()
+	-- Check if there is a git repo.
+	vim.cmd("let @x = system('git rev-parse --show-toplevel')")
+	-- Compare strings to check if it is a git repo or not.
+	-- If the command contains 'fatal', then it is not a git repo.
+	
+	-- 1) Check if there is root
+	local no_git = vim.fn.stridx(vim.fn.getreg('x'),"fatal")
+
+	if no_git == 0 then
+		print("ERROR: Not a git Repository")
+		return false
+    else
+        return true
+    end
+end
+
+local has_cmake_project = function(reg_var)
+        -- register has root directory from git
+		local root_dir = vim.fn.getreg(reg_var):gsub("[\n]","")
+        -- The file to find
+		local cmake_lists_file = root_dir .. '/CMakeLists.txt'
+        -- Check if a CMakeLists.txt is in the root directory of the project.
+		local has_cmake = vim.fn.filereadable(cmake_lists_file)
+
+        if has_cmake == 1 then
+            return true
+        else
+            return false
+        end
+end
+
 -- Compile using CMake
 M.compile = function()
 	local run = c_compile_cmd .. " " .. vim.fn.getcwd() .. relative_build
@@ -74,6 +106,10 @@ M.compile = function()
 	end
 end
 
+-- Call make to configure the project
+M.configure_project = function()
+    vim.cmd("!cmake -S root -B build_path")
+end
 
 -- Begin Debugging
 M.start_debug = function()

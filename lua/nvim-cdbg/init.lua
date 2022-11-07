@@ -78,9 +78,13 @@ end
 -- Begin Debugging
 M.start_debug = function()
 	--vim.cmd('echo "hello in lua function"')
-	vim.g.termdebug_wide = 1
-	vim.cmd('packadd termdebug')
-	vim.cmd('Termdebug')
+    -- The option below caused an error when terminal font was too big.
+	--vim.g.termdebug_wide = 1
+vim.cmd("packadd termdebug")
+	vim.cmd("Termdebug")
+    vim.cmd("Source")
+    -- Move the Source window to the right.
+    vim.cmd('execute "normal! \\<c-w>L"')
 end
 
 return M

@@ -108,7 +108,16 @@ end
 
 -- Call make to configure the project
 M.configure_project = function()
-    vim.cmd("!cmake -S root -B build_path")
+    if has_git() then
+        if  has_cmake_project('x') then
+            -- remove new line character
+		    local root_dir = vim.fn.getreg('x'):gsub("[\n]","")
+			local build_path = root_dir .. relative_build
+
+            local command = "!cmake -S " .. root_dir .. " -B " .. build_path
+            vim.cmd(command)
+        end
+    end
 end
 
 -- Begin Debugging

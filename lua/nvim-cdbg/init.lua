@@ -4,6 +4,7 @@ local M = {}
 local c_compile_cmd = 'cmake --build'
 local relative_build = '/out/build/'
 
+
 --M.example = function()
 --	print("In Example")
 --end
@@ -120,6 +121,7 @@ M.configure_project = function()
     end
 end
 
+
 -- Begin Debugging
 M.start_debug = function()
 	--vim.cmd('echo "hello in lua function"')
@@ -131,5 +133,39 @@ vim.cmd("packadd termdebug")
     -- Move the Source window to the right.
     vim.cmd('execute "normal! \\<c-w>L"')
 end
+
+local run_tests = function()
+	vim.cmd("let @x = system('git rev-parse --show-toplevel')")
+	-- Compare strings to check if it is a git repo or not.
+	-- If the command contains 'fatal', then it is not a git repo.
+	
+	-- 1) Check if there is root
+	local no_git = vim.fn.stridx(vim.fn.getreg('x'),"fatal")
+	if no_git == 0 then
+		print("ERROR: Not a git Repository")
+		return
+    end
+
+    -- Remove new line
+	local root_dir = vim.fn.getreg('x'):gsub("[\n]","")
+
+    -- Create window to store tests.
+    vim.cmd("vnew")
+    local bufnr = vim.api.nvim_get_current_buf()
+    local path_test = root_dir .. relative_build
+    vim.fn.jobstart({"ctest", "--verbose","--test-dir", path_test},
+    {
+        stdout_buffered = true,
+        on_stdout = function(_, data)
+            if data then
+                vim.api.nvim_buf_set_lines(bufnr, 0, 0, false, data)
+            end
+        end,
+    })
+end
+
+vim.api.nvim_create_user_command("CTest", function()
+    run_tests()
+end, {})
 
 return M
